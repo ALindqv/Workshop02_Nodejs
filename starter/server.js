@@ -47,13 +47,17 @@ const server = http.createServer((req, res) => {
         if (req.url === '/') {
             // Home page
             filePath = path.join(PUBLIC_DIR, 'index.html');
-        } 
+        }
         // TODO: Add 'else if' for '/about' -> 'about.html'
         // Example: else if (req.url === '/about') { filePath = path.join(PUBLIC_DIR, 'about.html'); }
-        
-        
+        else if (req.url === '/about') {
+            filePath = path.join(PUBLIC_DIR, 'about.html');
+        }
+         
         // TODO: Add 'else if' for '/contact' -> 'contact.html'
-        
+        else if (req.url === '/contact') {
+            filePath = path.join(PUBLIC_DIR, 'contact.html');
+        }
         
         // ========================================
         // TODO: Task 4 - Serve CSS Files
@@ -61,7 +65,7 @@ const server = http.createServer((req, res) => {
         // Handle requests for CSS files from /styles/ folder
         // Uncomment and complete the security check:
         
-        /*
+        
         else if (req.url.startsWith('/styles/')) {
             filePath = path.join(PUBLIC_DIR, req.url);
             
@@ -72,7 +76,7 @@ const server = http.createServer((req, res) => {
                 return;
             }
         }
-        */
+        
         else {
             // No route matched -> 404
             handle404(res);
@@ -90,7 +94,11 @@ const server = http.createServer((req, res) => {
         const extname = path.extname(filePath);
         
         // Step 2: Get the content type from MIME_TYPES object
-        const contentType = MIME_TYPES[extname] || 'text/html';
+        const contentType = MIME_TYPES[extname] || 'text/plain';
+
+        console.log(`  File: ${filePath}`);
+        console.log(`  Extension: ${extname}`);
+        console.log(`  Content-Type: ${contentType}`);
 
         // Step 3: Read the file
         fs.readFile(filePath, (err, content) => {
@@ -107,8 +115,8 @@ const server = http.createServer((req, res) => {
                 // Use res.writeHead() to set status code 200 and Content-Type header
                 // Use res.end() to send the file content
                 
-                // res.writeHead(200, { 'Content-Type': ??? });
-                // res.end(???, 'utf-8');
+                res.writeHead(200, { 'Content-Type': contentType });
+                res.end(content, 'utf-8');
             }
         });
 
@@ -171,7 +179,7 @@ function handleServerError(res, error) {
 server.listen(PORT, () => {
     // TODO: Log a message to indicate the server is running
     // Example: console.log(`Server is running on http://localhost:${PORT}`);
-    
+    console.log(`Server is running on http://localhost:${PORT}`)
     
     // Bonus: You can also log the available routes for better user experience
     /*
