@@ -72,14 +72,16 @@ const server = http.createServer((req, res) => {
             // Security: Prevent path traversal attacks (../ in URL)
             const normalizedPath = path.normalize(filePath);
             if (!normalizedPath.startsWith(PUBLIC_DIR)) {
-                handle404(res);
+                res.writeHead(403, { 'Content-Type':'text/plain' });
+                res.end('403 - Forbidden: Path traversal detected');
                 return;
             }
         }
         
         else {
             // No route matched -> 404
-            handle404(res);
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('404 - Not Found')
             return;
         }
 
